@@ -21,9 +21,6 @@ import java.util.ListIterator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import net.fabricmc.loader.impl.game.minecraft.applet.AppletLauncher;
-
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -42,6 +39,7 @@ import net.fabricmc.loader.api.VersionParsingException;
 import net.fabricmc.loader.api.metadata.version.VersionPredicate;
 import net.fabricmc.loader.impl.game.minecraft.Hooks;
 import net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider;
+import net.fabricmc.loader.impl.game.minecraft.applet.AppletLauncher;
 import net.fabricmc.loader.impl.game.patch.GamePatch;
 import net.fabricmc.loader.impl.launch.FabricLauncher;
 import net.fabricmc.loader.impl.util.log.Log;
@@ -180,7 +178,8 @@ public class EntrypointPatch extends GamePatch {
 					serverHasFile = newGameInsn.desc.startsWith("(Ljava/io/File;");
 				}
 			}
-			if(gameEntrypoint == null && isDirect && type == EnvType.CLIENT){
+
+			if (gameEntrypoint == null && isDirect && type == EnvType.CLIENT) {
 				gameEntrypoint = mainClass.name;
 			}
 		}
@@ -453,10 +452,12 @@ public class EntrypointPatch extends GamePatch {
 			} else {
 				// Indev and above.
 				ListIterator<AbstractInsnNode> it = gameConstructor.instructions.iterator();
-				if(isDirect){
+
+				if (isDirect) {
 					//bamboozle the appletlauncher when no applet
 					AppletLauncher.gameDir = gameProvider.getLaunchDirectory().toFile();
 				}
+
 				moveAfter(it, Opcodes.INVOKESPECIAL); /* Object.init */
 				it.add(new FieldInsnNode(Opcodes.GETSTATIC, gameClass.name, runDirectory.name, runDirectory.desc));
 				it.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/fabricmc/loader/impl/game/minecraft/applet/AppletMain", "hookGameDir", "(Ljava/io/File;)Ljava/io/File;", false));
@@ -578,7 +579,7 @@ public class EntrypointPatch extends GamePatch {
 
 	private Version getGameVersion() {
 		try {
-			return VersionParser.parse(gameProvider.getNormalizedGameVersion(),false);
+			return VersionParser.parse(gameProvider.getNormalizedGameVersion(), false);
 		} catch (VersionParsingException e) {
 			throw new RuntimeException(e);
 		}

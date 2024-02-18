@@ -150,7 +150,7 @@ public final class McVersionLookup {
 					return;
 				}
 
-				if (fromAnalyzer(entry.getInputStream(), new MethodConstantRetVisitor("getMinecraftVersion"), builder)){
+				if (fromAnalyzer(entry.getInputStream(), new MethodConstantRetVisitor("getMinecraftVersion"), builder)) {
 					return;
 				}
 

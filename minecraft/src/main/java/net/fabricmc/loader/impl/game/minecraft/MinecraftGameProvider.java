@@ -461,8 +461,8 @@ public class MinecraftGameProvider implements GameProvider {
 
 		//direct launch args
 		String[] args = new String[2];
-		args[0] = arguments.getOrDefault("username",null);
-		args[1] = arguments.getOrDefault("session","");
+		args[0] = arguments.getOrDefault("username", null);
+		args[1] = arguments.getOrDefault("session", "");
 
 		MethodHandle invoker;
 
@@ -474,7 +474,7 @@ public class MinecraftGameProvider implements GameProvider {
 		}
 
 		try {
-			if(targetClass.equals("net.minecraft.client.Minecraft")){ //direct launch
+			if (targetClass.equals("net.minecraft.client.Minecraft")) { //direct launch
 				invoker.invokeExact(args);
 			} else {
 				invoker.invokeExact(arguments.toArray());
